@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-@=mu)engr!x9(b(^wly1737e)d^wb598yyy^!l#8teu@++++*u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["plain-bats-call.loca.lt"]
 
 
 # Application definition
@@ -132,4 +132,19 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         # "v1.authentication.CustomJWTAuthentication",
     ]
+}
+
+# Logging settings
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+    },
 }

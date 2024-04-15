@@ -1,7 +1,12 @@
 from rest_framework import routers
-from .views import PhoneReadOnlyViewSet
+from . import views
+from django.urls import path
 
 router = routers.SimpleRouter(trailing_slash=False)
-router.register(r"phones", PhoneReadOnlyViewSet)
+router.register(r"phones", views.PhoneReadOnlyViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+    path("webhooks/", views.webhook_view),
+]
+
+urlpatterns += router.urls

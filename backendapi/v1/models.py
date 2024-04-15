@@ -26,9 +26,14 @@ class Price(models.Model):
     last_updated = models.DateTimeField(default=timezone.now)
 
 
-# Model to extend auth.User model, to store user's saved phones
+# Model to extend auth.User model
 class UserInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # auth_user is the one-to-one field to the corresponding auth.User model
+    auth_user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # userid_3p is the unique identifier for the user in the third-party user management service
+    userid_3p = models.CharField(max_length=50, null=True)
+    # saved_phones is the many-to-many field to the Phone model, through the SavedPhoneInfo model.
+    # This field stores the phones saved by the user.
     saved_phones = models.ManyToManyField(Phone, through="SavedPhoneInfo")
 
 

@@ -11,6 +11,7 @@ import jwt
 # 2. If authentication is attempted and fails, raise an AuthenticationFailed exception. An error response will be returned immediately,
 # regardless of any permissions checks, and without checking any other authentication schemes.
 
+
 class CustomJWTAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         # A third party user management and authentication service signs
@@ -28,7 +29,7 @@ kd3qqGElvW/VDL5AaWTg0nLVkjRo9z+40RQzuVaE8AkAFmxZzow3x+VJYKdjykkJ
 cKWTjpBP2dPwVZ4WWC+9aGVd+Gyn1o0CLelf4rEjGoXbAAEgAqeGUxrcIlbjXfbc
 mwIDAQAB
 -----END PUBLIC KEY-----"""
-        
+
         # If the user is logged in, the JWT token is sent in the Authorization header.
         if "Authorization" in request.headers:
             # Extract the token string from the header
