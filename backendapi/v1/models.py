@@ -13,24 +13,28 @@ class Phone(models.Model):
     )
 
 
-# Model to store price details
+# Model to store price details. A phone can have multiple prices from different sellers.
+# Each price is associated with a phone in a many-to-one relationship.
 class Price(models.Model):
     phone = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name="prices")
     posting_url = models.URLField(null=True)
     posting_price = models.PositiveIntegerField()
-    
+
     seller_choices = {"AMZ": "Amazon", "FLK": "Flipkart", "CRM": "Croma"}
     seller = models.CharField(max_length=20, choices=seller_choices)
+    # last_updated is the time when the price was last updated
     last_updated = models.DateTimeField(default=timezone.now)
 
 
-# Intermediary model to store user's saved phones
+# Model to extend auth.User model, to store user's saved phones
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     saved_phones = models.ManyToManyField(Phone, through="SavedPhoneInfo")
 
 
+# Intermediary model for many-to-many relationship between UserInfo and Phone
 class SavedPhoneInfo(models.Model):
     user_info = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
     phone = models.ForeignKey(Phone, on_delete=models.CASCADE)
+    # is_alert is True if user has set a price alert for this phone
     is_alert = models.BooleanField(default=False)

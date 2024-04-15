@@ -1,4 +1,7 @@
-from django.urls import path
-from . import views
+from rest_framework import routers
+from .views import PhoneReadOnlyViewSet
 
-urlpatterns = [path("phone/<model_name>", views.get_phone_price)]
+router = routers.SimpleRouter(trailing_slash=False)
+router.register(r"phones", PhoneReadOnlyViewSet)
+
+urlpatterns = router.urls
