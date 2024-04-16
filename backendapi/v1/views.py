@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 from rest_framework.response import Response
+from django.contrib.auth.models import User
 from .models import Phone
 from .serializers import *
 from django.views.decorators.csrf import csrf_exempt
@@ -58,11 +59,10 @@ def webhook_view(request):
     except WebhookVerificationError as e:
         return Response({"error": str(e)}, status=400)
 
-    logger.info(f"Webhook received: {msg}")
-    if msg["type"] == "user.created":
-        # Handle user creation event
-        msg_data = msg["data"]
+    msg_data = msg["data"]
 
+    # Handle user creation event
+    if msg["type"] == "user.created":
         # Extract user details from the webhook payload
         # Assign default username as "AnonymousUser" if username is not provided
         username = msg_data["username"] or "AnonymousUser"
@@ -73,7 +73,6 @@ def webhook_view(request):
         first_name = msg_data["first_name"]
         last_name = msg_data["last_name"]
         userid = msg_data["id"]
-        # last_login = msg_data["last_sign_in_at"]
 
         user_data = {
             "username": username,
@@ -91,5 +90,21 @@ def webhook_view(request):
             logger.info(f"User created: {username}")
             return Response(status=204)
         else:
-            logger.info(f"User creation failed: {user_serializer.errors}")
+            logger.error(f"User creation failed: {user_serializer.errors}")
             return Response(user_serializer.errors, status=400)
+
+    # Handle user delete event
+    elif msg["type"] == "user.deleted":
+        userid = msg_data["id"]
+
+        try:
+            # Get user whose third-party user ID matches the user ID in the webhook payload
+            user = User.objects.get(additional_info__userid_3p=userid)
+            # Delete the user
+            user.delete()
+            logger.info(f"User deleted: {user.get_username()}")
+            return Response(status=204)
+        # If user does not exist, return 404
+        except User.DoesNotExist:
+            logger.error(f"User not found with userid: {userid}")
+            return Response({"error": "User not found"}, status=404)

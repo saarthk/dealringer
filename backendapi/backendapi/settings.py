@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-@=mu)engr!x9(b(^wly1737e)d^wb598yyy^!l#8teu@++++*u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["lemon-moles-cry.loca.lt"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
