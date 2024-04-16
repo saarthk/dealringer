@@ -29,17 +29,21 @@ class Price(models.Model):
 # Model to extend auth.User model
 class UserInfo(models.Model):
     # auth_user is the one-to-one field to the corresponding auth.User model
-    auth_user = models.OneToOneField(User, on_delete=models.CASCADE)
+    auth_user = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True, related_name="additional_info"
+    )
     # userid_3p is the unique identifier for the user in the third-party user management service
     userid_3p = models.CharField(max_length=50, null=True)
     # saved_phones is the many-to-many field to the Phone model, through the SavedPhoneInfo model.
     # This field stores the phones saved by the user.
-    saved_phones = models.ManyToManyField(Phone, through="SavedPhoneInfo")
+    saved_phones = models.ManyToManyField(Phone, through="SavedPhone")
 
 
 # Intermediary model for many-to-many relationship between UserInfo and Phone
-class SavedPhoneInfo(models.Model):
-    user_info = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
+class SavedPhone(models.Model):
+    # related_name is set to "+" to avoid backward relation from UserInfo to SavedPhone
+    # since UserInfo already has a direct (forward) relation to SavedPhone through saved_phones field.
+    user_info = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name="+")
     phone = models.ForeignKey(Phone, on_delete=models.CASCADE)
     # is_alert is True if user has set a price alert for this phone
     is_alert = models.BooleanField(default=False)

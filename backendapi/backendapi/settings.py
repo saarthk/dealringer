@@ -82,7 +82,11 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "OPTIONS": {"service": "dbservice1", "passfile": ".pgpass"},
-    }
+    },
+    "test-db": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    },
 }
 
 

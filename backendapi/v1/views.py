@@ -31,6 +31,7 @@ class PhoneReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
 
 WEBHOOK_SECRET = "whsec_TJKxLPfHgdrovw42U+YibmFmffo3YK+Q"
 
+
 # Webhook view to receive and verify webhooks.
 # The third-party user management service sends a POST request to this endpoint when:
 # 1. A user is created
