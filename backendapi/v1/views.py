@@ -27,7 +27,7 @@ def get_phone_price(request, model_name):
 class PhoneReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Phone.objects.all()
     serializer_class = PhoneSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 
 def get_primary_email_address(email_addresses, primary_email_address_id):
@@ -37,7 +37,7 @@ def get_primary_email_address(email_addresses, primary_email_address_id):
     return None
 
 
-WEBHOOK_SECRET = "whsec_TJKxLPfHgdrovw42U+YibmFmffo3YK+Q"
+WEBHOOK_SECRET = "whsec_P0xBIyOtYsTOyxDJ/u4ixfM0Tt8iRnW6"
 
 
 # Webhook view to receive and verify webhooks.
@@ -61,7 +61,7 @@ def webhook_view(request):
 
     msg_data = msg["data"]
 
-    # Handle user creation event
+    # Handle user CREATE event
     if msg["type"] == "user.created":
         # Extract user details from the webhook payload
         # Assign default username as "AnonymousUser" if username is not provided
@@ -93,7 +93,7 @@ def webhook_view(request):
             logger.error(f"User creation failed: {user_serializer.errors}")
             return Response(user_serializer.errors, status=400)
 
-    # Handle user delete event
+    # Handle user DELETE event
     elif msg["type"] == "user.deleted":
         userid = msg_data["id"]
 
