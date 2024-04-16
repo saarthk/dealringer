@@ -35,7 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = "__all__"
+        # We exclude the password field from serialization, since APIs will use token-based authentication.
+        exclude = ["password"]
 
     # The create method is overridden to create the UserInfo instance along with the User instance.
     # By default, nested serializers are read-only. We need to override the create method to make them writable.
@@ -47,6 +48,9 @@ class UserSerializer(serializers.ModelSerializer):
         # The nested UserInfo data is popped out from the validated_data.
         info_data = validated_data.pop("additional_info")
         user = User.objects.create(**validated_data)
+        # Since we are not using the password field for authentication, we set it as unusable (best practice).
+        user.set_unusable_password()
+        user.save()
         UserInfo.objects.create(auth_user=user, **info_data)
 
         # Since UserInfo model has a one-to-one relation with User model, the User model
