@@ -12,7 +12,7 @@ class PhoneSerializer(serializers.ModelSerializer):
 class PriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Price
-        fields = "__all__"
+        fields = ["phone", "posting_url", "posting_price", "seller"]
 
 
 # SavedPhone model will not be serialized. This is because it is an intermediary model,

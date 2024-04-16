@@ -1,11 +1,11 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from .models import Phone
-from .serializers import *
+from .models import Phone, Price
+from .serializers import PhoneSerializer, PriceSerializer, UserSerializer
 from django.views.decorators.csrf import csrf_exempt
 from svix import Webhook, WebhookVerificationError
 import logging
@@ -27,6 +27,22 @@ def get_phone_price(request, model_name):
 class PhoneReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Phone.objects.all()
     serializer_class = PhoneSerializer
+    permission_classes = [IsAuthenticated]
+
+    # Custom action to retrieve all prices of a phone (across all sellers)
+    @action(methods=["get"], detail=True, permission_classes=[IsAuthenticated])
+    def prices(self, request, pk=None):
+        # self.get_object() returns the phone instance corresponding to the primary key (pk)
+        # Refer https://www.django-rest-framework.org/api-guide/generic-views/#genericapiview
+        phone = self.get_object()
+        prices = phone.prices.all()
+        serializer = PriceSerializer(prices, many=True)
+        return Response(serializer.data)
+
+
+class PriceViewSet(viewsets.ModelViewSet):
+    queryset = Price.objects.all()
+    serializer_class = PriceSerializer
     permission_classes = [IsAuthenticated]
 
 
