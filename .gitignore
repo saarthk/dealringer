@@ -51,3 +51,12 @@ manage.py
 
 # example database
 drf_example
+
+# migrations
+migrations/
+
+# phone data files
+phones_*.json
+
+# SQLite database file
+db.sqlite3

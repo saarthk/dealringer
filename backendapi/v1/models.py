@@ -13,16 +13,17 @@ class Phone(models.Model):
     )
 
 
-# Model to store price details. A phone can have multiple prices from different sellers.
-# Each price is associated with a phone in a many-to-one relationship.
-class Price(models.Model):
-    phone = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name="prices")
+# Model to store posting details. A phone can have multiple postings from different sellers.
+class Posting(models.Model):
+    phone = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name="postings")
+    # variant is the specific model variant (e.g., color, storage) of the phone
+    variant = models.CharField(max_length=50, null=True)
     posting_url = models.URLField(null=True)
-    posting_price = models.PositiveIntegerField()
+    price = models.PositiveIntegerField()
 
     seller_choices = {"AMZ": "Amazon", "FLK": "Flipkart", "CRM": "Croma"}
     seller = models.CharField(max_length=20, choices=seller_choices)
-    # last_updated is the time when the price was last updated
+    # last_updated is the time when the posting was last updated
     last_updated = models.DateTimeField(default=timezone.now)
 
 

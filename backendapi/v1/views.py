@@ -1,11 +1,12 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import viewsets
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from .models import Phone, Price
-from .serializers import PhoneSerializer, PriceSerializer, UserSerializer
+from django.db.models import Min
+from .models import Phone, Posting
+from .serializers import PhoneSerializer, PostingSerializer, UserSerializer
 from django.views.decorators.csrf import csrf_exempt
 from svix import Webhook, WebhookVerificationError
 import logging
@@ -15,34 +16,72 @@ logger = logging.getLogger("django")
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def get_phone_price(request, model_name):
-    response_str = f"{request.user} has requested for the price of {model_name}"
-    return Response({"message": response_str})
+def get_saved_phones(request):
+    user = request.user
+    saved_phones = user.additional_info.saved_phones.all()
+    serializer = PhoneSerializer(saved_phones, many=True)
+    return Response(serializer.data)
 
 
 # ViewSet to provide read-only access to Phone model
+# This viewset is not authenticated (permission class is AllowAny),
+# since it does not expose any sensitive information, and is intended to be used by anyone.
+
+
 # GET method handlers are provided by default to:
 # 1. Retrieve a list of all phones
 # 2. Retrieve a single phone by its primary key
 class PhoneReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Phone.objects.all()
     serializer_class = PhoneSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
-    # Custom action to retrieve all prices of a phone (across all sellers)
-    @action(methods=["get"], detail=True, permission_classes=[IsAuthenticated])
-    def prices(self, request, pk=None):
+    # Retrieve all postings of a phone (across all sellers).
+    @action(methods=["get"], detail=True)
+    def postings(self, request, pk=None):
         # self.get_object() returns the phone instance corresponding to the primary key (pk)
         # Refer https://www.django-rest-framework.org/api-guide/generic-views/#genericapiview
         phone = self.get_object()
-        prices = phone.prices.all()
-        serializer = PriceSerializer(prices, many=True)
+        postings = phone.postings.all()
+        serializer = PostingSerializer(postings, many=True)
         return Response(serializer.data)
 
+    # Retrieve the minimum price for a phone
+    @action(methods=["get"], detail=True, url_path="minprice")
+    def minimum_price(self, request, pk=None):
+        phone = self.get_object()
+        postings = phone.postings.all()
+        min_price = postings.aggregate(Min("price"))
+        # aggregate returns a dictionary with <field>__<function> as the key
+        min_price = min_price["price__min"]
+        return Response({"phone": phone.id, "min_price": min_price})
 
-class PriceViewSet(viewsets.ModelViewSet):
-    queryset = Price.objects.all()
-    serializer_class = PriceSerializer
+    # Adding and removing bookmarks are idempotent actions. Hence, PUT and DELETE methods are used.
+    # IMPORTANT: Permissions are set to IsAuthenticated, since only authenticated users can bookmark a phone.
+    @action(
+        methods=["put", "delete"],
+        detail=True,
+        permission_classes=[IsAuthenticated],
+    )
+    def bookmark(self, request, pk=None):
+        phone = self.get_object()
+        user = request.user
+
+        # Add phone to bookmarks
+        if request.method == "PUT":
+            user.additional_info.saved_phones.add(phone)
+            return Response(f"{phone.brand_name} {phone.model_name} bookmarked")
+        # Remove phone from bookmarks
+        elif request.method == "DELETE":
+            user.additional_info.saved_phones.remove(phone)
+            return Response(
+                f"{phone.brand_name} {phone.model_name} removed from bookmarks"
+            )
+
+
+class PostingViewSet(viewsets.ModelViewSet):
+    queryset = Posting.objects.all()
+    serializer_class = PostingSerializer
     permission_classes = [IsAuthenticated]
 
 

@@ -1,18 +1,18 @@
 from rest_framework import serializers
-from .models import Phone, Price, UserInfo, SavedPhone
+from .models import Phone, Posting, UserInfo, SavedPhone
 from django.contrib.auth.models import User
 
 
 class PhoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Phone
-        fields = "__all__"
+        exclude = ["id"]
 
 
-class PriceSerializer(serializers.ModelSerializer):
+class PostingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Price
-        fields = ["phone", "posting_url", "posting_price", "seller"]
+        model = Posting
+        fields = ["phone", "variant", "posting_url", "price", "seller"]
 
 
 # SavedPhone model will not be serialized. This is because it is an intermediary model,

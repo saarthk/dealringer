@@ -4,10 +4,11 @@ from django.urls import path
 
 router = routers.SimpleRouter()
 router.register(r"phones", views.PhoneReadOnlyViewSet)
-router.register(r"prices", views.PriceViewSet)
+router.register(r"postings", views.PostingViewSet)
 
 urlpatterns = [
     path("webhooks/", views.webhook_view),
+    path("savedphones/", views.get_saved_phones, name="saved-phones"),
 ]
 
 urlpatterns += router.urls
