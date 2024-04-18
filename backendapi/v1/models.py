@@ -8,6 +8,8 @@ class Phone(models.Model):
     device_id = models.CharField(max_length=50, null=True)
     brand_name = models.CharField(max_length=20, null=True)
     model_name = models.CharField(max_length=20, null=True)
+    # min_price is the minimum price of the phone across all sellers
+    min_price = models.PositiveIntegerField(null=True)
     photo_url = models.URLField(
         default="https://cdn4.iconfinder.com/data/icons/desktop-app-free/32/Desktop_Desktop_App_Smartphone_Phone_Android-09-512.png"
     )

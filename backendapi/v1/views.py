@@ -47,14 +47,14 @@ class PhoneReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
     # Retrieve the minimum price for a phone
-    @action(methods=["get"], detail=True, url_path="minprice")
-    def minimum_price(self, request, pk=None):
-        phone = self.get_object()
-        postings = phone.postings.all()
-        min_price = postings.aggregate(Min("price"))
-        # aggregate returns a dictionary with <field>__<function> as the key
-        min_price = min_price["price__min"]
-        return Response({"phone": phone.id, "min_price": min_price})
+    # @action(methods=["get"], detail=True, url_path="minprice")
+    # def minimum_price(self, request, pk=None):
+    #     phone = self.get_object()
+    #     postings = phone.postings.all()
+    #     min_price = postings.aggregate(Min("price"))
+    #     # aggregate returns a dictionary with <field>__<function> as the key
+    #     min_price = min_price["price__min"]
+    #     return Response({"phone": phone.id, "min_price": min_price})
 
     # Adding and removing bookmarks are idempotent actions. Hence, PUT and DELETE methods are used.
     # IMPORTANT: Permissions are set to IsAuthenticated, since only authenticated users can bookmark a phone.
