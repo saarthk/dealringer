@@ -3,14 +3,13 @@ import { useState } from "react";
 import clsx from "clsx/lite";
 
 const PhoneCard = () => {
-  const [saved, setSaved] = useState(false);
   const [alert, setAlert] = useState(false);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col shadow-xl p-1">
       <div className="flex">
         {/* Phone image */}
-        <div className="h-40 relative">
+        <div className="h-40 flex relative">
           <img
             src="https://m-cdn.phonearena.com/images/phones/82892-800/Apple-iPhone-13.jpg"
             alt="Apple iPhone 13"
@@ -24,44 +23,14 @@ const PhoneCard = () => {
           >
             <BellIcon
               className={clsx(
-                "w-5 stroke-base-content",
+                "w-5 stroke-base-content stroke-2",
                 alert && "fill-yellow-400",
               )}
             />
           </button>
         </div>
-        {/* Action buttons */}
-        {/* <div className="flex flex-col py-4 gap-2"> */}
-        {/*   <button */}
-        {/*     className="btn btn-ghost btn-circle btn-xs" */}
-        {/*     onClick={() => { */}
-        {/*       setAlert(!alert); */}
-        {/*     }} */}
-        {/*   > */}
-        {/*     <BellIcon */}
-        {/*       className={clsx( */}
-        {/*         "w-7", */}
-        {/*         !alert && "fill-base-300", */}
-        {/*         alert && "fill-yellow-400", */}
-        {/*       )} */}
-        {/*     /> */}
-        {/*   </button> */}
-        {/*   <button */}
-        {/*     className="btn btn-ghost btn-circle btn-xs" */}
-        {/*     onClick={() => { */}
-        {/*       setSaved(!saved); */}
-        {/*     }} */}
-        {/*   > */}
-        {/*     <BookmarkIcon */}
-        {/*       className={clsx( */}
-        {/*         "w-8", */}
-        {/*         !saved && "fill-base-300", */}
-        {/*         saved && "fill-red-400", */}
-        {/*       )} */}
-        {/*     /> */}
-        {/*   </button> */}
-        {/* </div> */}
       </div>
+
       {/* Body */}
       <div className="py-3 px-3 flex flex-col">
         <div className="text-neutral font-medium text-sm">
