@@ -1,5 +1,7 @@
-import { Bars3Icon, BellIcon, BookmarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, BellIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import Logo from "./logo";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   return (
@@ -15,31 +17,42 @@ const Navbar = () => {
         <Logo />
         <div className="text-xl font-black text-base-content">dealringer</div>
       </div>
+
       {/* Action buttons */}
-      {/* Notifications */}
-      <div className="flex-none">
-        <div className="btn btn-ghost">
-          <div className="indicator">
-            <BellIcon className="w-6 stroke-base-content stroke-2" />
-            <span className="badge badge-xs badge-primary indicator-item"></span>
-          </div>
-        </div>
+      <SignedOut>
+        <button className="btn btn-ghost btn-circle">
+          <SignInButton mode="modal">
+            <UserCircleIcon className="w-7 fill-base-content" />
+          </SignInButton>
+        </button>
+      </SignedOut>
 
-        {/* Separator */}
-        <div className="w-1"></div>
-
-        {/* User Avatar */}
-        <div className="flex">
-          <div className="avatar">
-            <div className="w-8 rounded-full">
-              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+      <SignedIn>
+        {/* Notifications */}
+        <div className="flex-none">
+          <div className="btn btn-ghost">
+            <div className="indicator">
+              <BellIcon className="w-6 stroke-base-content stroke-2" />
+              <span className="badge badge-xs badge-primary indicator-item"></span>
             </div>
           </div>
-          <div className="text-base-content hidden md:flex items-center">
-            Saarthak
+
+          {/* Separator */}
+          <div className="w-1"></div>
+
+          {/* User Avatar */}
+          <div className="flex">
+            <div className="avatar">
+              <div className="w-8 rounded-full">
+                <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+              </div>
+            </div>
+            <div className="text-base-content hidden md:flex items-center">
+              Saarthak
+            </div>
           </div>
         </div>
-      </div>
+      </SignedIn>
     </div>
   );
 };
