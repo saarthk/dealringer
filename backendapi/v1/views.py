@@ -92,7 +92,7 @@ def get_primary_email_address(email_addresses, primary_email_address_id):
     return None
 
 
-WEBHOOK_SECRET = "whsec_P0xBIyOtYsTOyxDJ/u4ixfM0Tt8iRnW6"
+WEBHOOK_SECRET = "whsec_MIC+Pk4l2Ct/E1wpmQQDz9Aa6dXiTbNs"
 
 
 # Webhook view to receive and verify webhooks.
