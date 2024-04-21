@@ -1,10 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.indexes import GinIndex
 
 
 # Model to store phone details
 class Phone(models.Model):
+    class Meta:
+        indexes = [
+            GinIndex(
+                SearchVector("brand_name", "model_name", config="english"),
+                name="phone_search_index",
+            )
+        ]
+
     device_id = models.CharField(max_length=50, null=True)
     brand_name = models.CharField(max_length=20, null=True)
     model_name = models.CharField(max_length=20, null=True)

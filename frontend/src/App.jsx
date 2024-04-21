@@ -1,7 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layouts/root-layout";
 import HomePage from "./routes/home-page";
+import SearchPage from "./routes/search-page";
 import { loader as phonesLoader } from "./routes/home-page";
+import { loader as searchedPhonesLoader } from "./routes/search-page";
 
 const router = createBrowserRouter([
   {
@@ -11,6 +13,11 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
         loader: phonesLoader,
+      },
+      {
+        path: "/search",
+        element: <SearchPage />,
+        loader: searchedPhonesLoader,
       },
     ],
   },

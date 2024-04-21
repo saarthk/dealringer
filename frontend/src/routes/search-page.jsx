@@ -4,35 +4,46 @@ import PaginationGroup from "../components/pagination-btn-group";
 
 export async function loader({ request }) {
   const url = new URL(request.url);
+  // Extract the search query and page number from the URL
+  const searchQuery = url.searchParams.get("q");
   const pageNum = url.searchParams.get("page") ?? "1";
-  const res = await fetch(`http://localhost:8000/v1/phones?page=${pageNum}`);
+
+  const params = new URLSearchParams({ q: searchQuery, page: pageNum });
+  const res = await fetch(
+    `http://localhost:8000/v1/search?${params.toString()}`,
+  );
   const phones = await res.json();
-  return { pageNum: pageNum, phones: phones };
+
+  return {
+    pageNum: pageNum,
+    searchQuery: searchQuery,
+    phones: phones,
+  };
 }
 
-const HomePage = () => {
-  const { pageNum, phones } = useLoaderData();
-  // If phones.next is not null, it means there are more pages to load.
-  // So, we calculate the maximum page number based on the total count of phones
-  // Else, we use the current page number as the maximum page number.
+const SearchPage = () => {
+  const { pageNum, searchQuery, phones } = useLoaderData();
+
   const maxPageNum = phones.next
     ? Math.ceil(phones.count / phones.results.length)
     : pageNum;
 
   return (
     <div className="grow p-10 flex flex-col items-center gap-2">
+      <div className="text-base-content">
+        {phones.results.length ? <>Showing</> : <>No</>} results for{" "}
+        {searchQuery}
+      </div>
       {/* Phone Cards */}
       {phones.results.map((phone) => {
         return <PhoneCardHorizontal phone={phone} key={phone.device_id} />;
       })}
-
       {/* Separator */}
       <div className="h-10"></div>
-
       {/* Pagination buttons */}
-      <PaginationGroup pageNum={pageNum} maxPageNum={maxPageNum} />
+      <PaginationGroup pageNum={pageNum} maxPageNum={maxPageNum} />j
     </div>
   );
 };
 
-export default HomePage;
+export default SearchPage;

@@ -1,17 +1,34 @@
+from typing import override
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import viewsets
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from django.db.models import Min
 from .models import Phone, Posting
 from .serializers import PhoneSerializer, PostingSerializer, UserSerializer
 from django.views.decorators.csrf import csrf_exempt
 from svix import Webhook, WebhookVerificationError
 import logging
+from django.contrib.postgres.search import SearchVector, SearchQuery
 
 logger = logging.getLogger("django")
+
+
+class SearchPhones(ListAPIView):
+    serializer_class = PhoneSerializer
+    permission_classes = [AllowAny]
+
+    @override
+    def get_queryset(self):
+        query = self.request.query_params.get("q")
+        if query is not None:
+            query = SearchQuery(query)
+            return Phone.objects.annotate(
+                search=SearchVector("brand_name", "model_name")
+            ).filter(search=query)
+        return Phone.objects.all()
 
 
 @api_view(["GET"])

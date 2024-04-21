@@ -6,6 +6,7 @@ import {
   EnvelopeIcon,
   PowerIcon,
 } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
@@ -13,10 +14,10 @@ const Sidebar = () => {
       {/* Top section */}
       <ul className="menu">
         <li>
-          <a>
+          <Link to="/">
             <HomeIcon className="w-5 stroke-2 stroke-orange-400" />
             <span className="font-bold">Home</span>
-          </a>
+          </Link>
         </li>
 
         <li>

@@ -1,4 +1,5 @@
 import { BellIcon } from "@heroicons/react/24/outline";
+import { BellIcon as BellIconFilled } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import clsx from "clsx/lite";
 
@@ -48,12 +49,11 @@ const PhoneCardHorizontal = ({ phone }) => {
               setAlert(!isAlert);
             }}
           >
-            <BellIcon
-              className={clsx(
-                "w-7 p-0.5 stroke-base-content stroke-2",
-                isAlert && "fill-yellow-300",
-              )}
-            />
+            {isAlert ? (
+              <BellIconFilled className="w-7 p-0.5 fill-base-content" />
+            ) : (
+              <BellIcon className="w-7 p-0.5 stroke-base-content stroke-2" />
+            )}
           </button>
           {/* <p className="text-base-content text-xs">Set alert</p> */}
           <div className="grow"></div>

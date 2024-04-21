@@ -1,7 +1,14 @@
 import clsx from "clsx/lite";
-import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const PaginationGroup = ({ pageNum, maxPageNum }) => {
+  let [searchParams, setSearchParams] = useSearchParams();
+
+  const updatePageNum = (newPageNum) => {
+    searchParams.set("page", newPageNum);
+    setSearchParams(searchParams);
+  };
+
   // To ensure that the page number is within the bounds
   pageNum = Math.min(pageNum, maxPageNum);
 
@@ -16,37 +23,40 @@ const PaginationGroup = ({ pageNum, maxPageNum }) => {
 
   return (
     <div className="join">
-      {/* Next arrow */}
+      {/* Previous arrow */}
       {pageNum > 1 && (
         <>
-          {/* <button className="join-item btn">«</button> */}
-          <Link to={`?page=${pageNum - 1}`} className="join-item btn">
+          <button
+            className="join-item btn"
+            onClick={() => updatePageNum(pageNum - 1)}
+          >
             ‹
-          </Link>
+          </button>
         </>
       )}
 
       {/* Page number buttons */}
       {deltas.map((d) => {
         return (
-          <Link
-            to={`?page=${pageNum + d}`}
-            // If delta is 0, i.e., it's the current page, show an active button
+          <button
+            onClick={() => updatePageNum(pageNum + d)}
             className={clsx("join-item btn", d == 0 && "btn-active")}
             key={d}
           >
             {pageNum + d}
-          </Link>
+          </button>
         );
       })}
 
-      {/* Previous arrow */}
+      {/* Next arrow */}
       {pageNum < maxPageNum && (
         <>
-          <Link to={`?page=${pageNum + 1}`} className="join-item btn">
+          <button
+            className="join-item btn"
+            onClick={() => updatePageNum(pageNum + 1)}
+          >
             ›
-          </Link>
-          {/* <button className="join-item btn">»</button> */}
+          </button>
         </>
       )}
     </div>
