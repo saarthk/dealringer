@@ -28,12 +28,16 @@ const SearchPage = () => {
     ? Math.ceil(phones.count / phones.results.length)
     : pageNum;
 
+  let infoMsg = `Showing results for ${searchQuery}`;
+  if (searchQuery == "") {
+    infoMsg = "Showing all results";
+  } else if (phones.results.length == 0) {
+    infoMsg = `No results for ${searchQuery}`;
+  }
+
   return (
     <div className="grow p-10 flex flex-col items-center gap-2">
-      <div className="text-base-content">
-        {phones.results.length ? <>Showing</> : <>No</>} results for{" "}
-        {searchQuery}
-      </div>
+      <div className="text-base-content">{infoMsg}</div>
       {/* Phone Cards */}
       {phones.results.map((phone) => {
         return <PhoneCardHorizontal phone={phone} key={phone.device_id} />;

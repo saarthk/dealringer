@@ -22,8 +22,11 @@ class SearchPhones(ListAPIView):
 
     @override
     def get_queryset(self):
+        # Extract the query parameter from the request
         query = self.request.query_params.get("q")
-        if query is not None:
+
+        if query is not None and query != "":
+            # Perform full-text search on the brand_name and model_name fields
             query = SearchQuery(query)
             return Phone.objects.annotate(
                 search=SearchVector("brand_name", "model_name")
@@ -109,7 +112,7 @@ def get_primary_email_address(email_addresses, primary_email_address_id):
     return None
 
 
-WEBHOOK_SECRET = "whsec_MIC+Pk4l2Ct/E1wpmQQDz9Aa6dXiTbNs"
+WEBHOOK_SECRET = "whsec_MG7lOShy4a13QgWyxFi18CPJcM2SuTk9"
 
 
 # Webhook view to receive and verify webhooks.

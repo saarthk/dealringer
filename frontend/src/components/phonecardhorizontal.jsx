@@ -1,10 +1,10 @@
-import { BellIcon } from "@heroicons/react/24/outline";
-import { BellIcon as BellIconFilled } from "@heroicons/react/24/solid";
+import { BookmarkIcon } from "@heroicons/react/24/outline";
+import { BookmarkIcon as BookmarkIconFilled } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import clsx from "clsx/lite";
 
 const PhoneCardHorizontal = ({ phone }) => {
-  const [isAlert, setAlert] = useState(false);
+  const [isSaved, setSaved] = useState(false);
 
   // phone = {
   //   brand_name: "Apple",
@@ -46,13 +46,13 @@ const PhoneCardHorizontal = ({ phone }) => {
           <button
             className="bg-base-300 btn btn-ghost btn-circle btn-xs"
             onClick={() => {
-              setAlert(!isAlert);
+              setSaved(!isSaved);
             }}
           >
-            {isAlert ? (
-              <BellIconFilled className="w-7 p-0.5 fill-base-content" />
+            {isSaved ? (
+              <BookmarkIconFilled className="w-7 p-0.5 fill-base-content" />
             ) : (
-              <BellIcon className="w-7 p-0.5 stroke-base-content stroke-2" />
+              <BookmarkIcon className="w-7 p-0.5 stroke-base-content stroke-2" />
             )}
           </button>
           {/* <p className="text-base-content text-xs">Set alert</p> */}
